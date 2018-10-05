@@ -103,4 +103,21 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+router.get('/:id/actions', (req, res) => {
+  const id = req.params.id;
+  projectDb
+    .getProjectActions(id)
+    .then((projectActions) => {
+      if (projectActions.length === 0) {
+        return res.status(404).send({
+          message: 'No actions for project found.',
+        });
+      }
+      res.status(200).json(projectActions);
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'Error retrieving the projects actions.' });
+    });
+});
+
 module.exports = router;
