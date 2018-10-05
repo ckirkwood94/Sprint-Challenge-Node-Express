@@ -75,7 +75,7 @@ router.put('/:id', checkReqs, (req, res) => {
           message: 'The project with the specified ID does not exist.',
         });
       }
-      res.status(200).json(newProject);
+      res.status(200).json(project);
     })
     .catch(() => {
       res.status(500).send({
