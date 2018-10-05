@@ -84,4 +84,23 @@ router.put('/:id', checkReqs, (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  projectDb
+    .remove(id)
+    .then((remove) => {
+      if (!remove) {
+        return res.status(404).send({
+          message: 'The project with the specified ID does not exist.',
+        });
+      }
+      res.status(200).send({ message: `Project with ID ${id} was removed.` });
+    })
+    .catch(() => {
+      res.status(500).json({
+        error: 'The user could not be removed.',
+      });
+    });
+});
+
 module.exports = router;
