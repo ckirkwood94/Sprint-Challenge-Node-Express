@@ -5,11 +5,15 @@ const projectDb = require('../data/helpers/projectModel');
 
 // MIDDLEWARE
 router.use(express.json());
-const checkName = (req, res, next) => {
+const checkReqs = (req, res, next) => {
   if (!req.body.name || req.body.name.length > 128) {
     return res.status(400).send({
       message:
         'Please provide a name for the project that is less than 128 characters.',
+    });
+  } else if (!req.body.description) {
+    return res.status(400).send({
+      message: 'Please provide a description for the project',
     });
   }
   next();
@@ -43,13 +47,8 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', checkName, (req, res) => {
+router.post('/', checkReqs, (req, res) => {
   const { name, description } = req.body;
-  if (!description) {
-    return res.status(400).send({
-      message: 'Please provide a description for the project',
-    });
-  }
   const newProject = { name, description };
   projectDb
     .insert(newProject)
@@ -62,5 +61,7 @@ router.post('/', checkName, (req, res) => {
         .send({ error: 'The project information could not be saved.' });
     });
 });
+
+router.put('/:id', checkReqs, (req, res) => {});
 
 module.exports = router;
